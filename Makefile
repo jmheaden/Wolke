@@ -10,7 +10,8 @@ srcfiles := $(shell find . -name "*.C")
 objects	 := $(patsubst %.C, %-$(METHOD).o, $(srcfiles))
 
 INC_DIRS := $(shell find include -type d -not -path "*/.svn*")
-INCLUDES  := $(foreach i, $(INC_DIRS), -I$(i))
+INCLUDES  := $(foreach i, $(INC_DIRS), -I$(i)) -I$(USD_DIR)/include
+LDLIBS := -L$(USD_DIR)/lib -lusd
 
 all: $(full_appname)
 
@@ -21,10 +22,10 @@ $(appname)-dbg: $(objects)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -g -fno-omit-frame-pointer -o $(full_appname) $(objects) $(LDLIBS)
 
 %-opt.o: %.C
-	$(CXX) -c $(CXXFLAGS) $(LDFLAGS) -g -fno-omit-frame-pointer -O3 -MMD -MP -MF $@.d $(INCLUDES) -MT $@ $< -o $@ $(LDLIBS)
+	$(CXX) -c $(CXXFLAGS) $(LDFLAGS) -g -fno-omit-frame-pointer -O3 -MMD -MP -MF $@.d $(INCLUDES) -MT $@ $< -o $@
 
 %-dbg.o: %.C
-	$(CXX) -c $(CXXFLAGS) $(LDFLAGS) -g -fno-omit-frame-pointer -MMD -MP -MF $@.d $(INCLUDES) -MT $@ $< -o $@ $(LDLIBS)
+	$(CXX) -c $(CXXFLAGS) $(LDFLAGS) -g -fno-omit-frame-pointer -MMD -MP -MF $@.d $(INCLUDES) -MT $@ $< -o $@
 
 clean:
 	rm -f *.o
