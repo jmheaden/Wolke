@@ -1,0 +1,4 @@
+*.o
+*.d
+wolke-opt
+wolke-dbg
